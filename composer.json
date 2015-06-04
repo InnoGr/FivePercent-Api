@@ -1,0 +1,39 @@
+{
+    "name": "fivepercent/api",
+    "description": "Api system",
+    "keywords": [ "api", "json-rpc server" ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitaliy Zhuk",
+            "email": "zhuk2205@gmail.com"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.4",
+        "fivepercent/cache": "~1.0",
+        "fivepercent/exception": "~1.0",
+        "fivepercent/reflection": "~1.0",
+        "fivepercent/error": "~1.0",
+        "symfony/event-dispatcher": "~2.3"
+    },
+
+    "suggest": {
+        "symfony/validator": "For validate request objects",
+        "fivepercent/convert": "For convert input parameters",
+        "fivepercent/object-mapper": "For map input data to request object",
+        "fivepercent/object-security": "For check access granted to call class method"
+    },
+
+    "autoload": {
+        "psr-4": { "FivePercent\\Component\\Api\\": "src/" }
+    },
+
+    "repositories": [
+        {"type": "composer", "url": "http://toran.internalone.com/repo/private/"},
+        {"type": "composer", "url": "http://toran.internalone.com/repo/packagist/"},
+        {"packagist": false}
+    ]
+}
