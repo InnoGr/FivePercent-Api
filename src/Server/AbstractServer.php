@@ -156,7 +156,7 @@ abstract class AbstractServer implements ServerInterface
     {
         $contentType = $this->getContentType();
 
-        if ($contentType) {
+        if ($contentType && !$response->headers->get('Content-Type')) {
             $response->headers->set('Content-Type', $contentType, true);
         }
     }

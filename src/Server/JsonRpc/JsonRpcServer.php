@@ -26,6 +26,7 @@ use FivePercent\Component\Exception\ViolationListException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpFoundation\Response as SfResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -79,7 +80,10 @@ class JsonRpcServer extends AbstractServer
     {
         $this->requestId = null;
 
-        if ($request->getMethod() === SfRequest::METHOD_POST) {
+        if ($request->getMethod() === SfRequest::METHOD_OPTIONS) {
+            // OPTIONS query
+            return $this->processOptionsQuery($request);
+        } if ($request->getMethod() === SfRequest::METHOD_POST) {
             // Process method
             return $this->processApiMethod($request);
         } elseif ($request->getMethod() === SfRequest::METHOD_GET) {
@@ -139,6 +143,11 @@ class JsonRpcServer extends AbstractServer
 
                 return $this->createErrorResponse($code, $message);
 
+            case $exception instanceof MethodNotAllowedHttpException:
+                return new Response('', 405, [
+                    'Allow' => 'GET, POST, HEAD, OPTIONS',
+                    'Content-Type' => 'text/plain'
+                ]);
 
             default:
                 return $this->createErrorResponse(self::ERROR_APPLICATION);
@@ -160,6 +169,23 @@ class JsonRpcServer extends AbstractServer
     protected function getContentType()
     {
         return 'application/json';
+    }
+
+    /**
+     * Process OPTIONS query
+     *
+     * @param SfRequest $request
+     *
+     * @return Response
+     */
+    private function processOptionsQuery(SfRequest $request)
+    {
+        $response = new Response('', 200, [
+            'Allow' => 'GET, POST, HEAD, OPTIONS',
+            'Content-Type' => 'text/plain'
+        ]);
+
+        return $response;
     }
 
     /**
